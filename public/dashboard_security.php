@@ -1,12 +1,10 @@
 <?php
-// Oturum zaten başlatılmış mı kontrol et
+// dashboard_security.php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
 require_once "../config/db.php";
 
-// Güvenlik yetkisi yoksa yönlendir
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "security") {
     header("Location: login.php");
     exit;
@@ -30,6 +28,7 @@ $name = $_SESSION["name"] ?? "Güvenlik";
         html, body {
             height: 100%;
             font-family: 'Segoe UI', sans-serif;
+            background-color:rgb(110, 162, 207); /* bebek mavisi */
         }
 
         body {
@@ -37,7 +36,6 @@ $name = $_SESSION["name"] ?? "Güvenlik";
             overflow: hidden;
         }
 
-        /* SOL SİDEBAR */
         .sidebar {
             width: 250px;
             background-color: #0a2342;
@@ -74,12 +72,10 @@ $name = $_SESSION["name"] ?? "Güvenlik";
             background-color: #1b3b75;
         }
 
-        /* ANA ALAN */
         .main {
             flex: 1;
-            position: relative;
-            background: url("../img/ocean.jpg") no-repeat center center fixed;
-            background-size: cover;
+            background-color:rgb(179, 220, 255)
+;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -109,12 +105,7 @@ $name = $_SESSION["name"] ?? "Güvenlik";
 </head>
 <body>
 
-<div class="sidebar">
-    <h2>Ocean Breeze</h2>
-    <a href="../enter_leave/enter.php" class="menu-button">giriş / çıkış</a>
-    <a href="../permission/permission_create.php" class="menu-button">izin alma</a>
-    <a href="logout.php" class="menu-button">çıkış yap</a>
-</div>
+<?php include "../includes/sidebar.php"; ?>
 
 <div class="main">
     <div class="welcome-box">
