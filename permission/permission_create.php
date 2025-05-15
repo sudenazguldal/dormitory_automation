@@ -4,49 +4,75 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once "../config/db.php";
 
+// Yetki kontrolü
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "security") {
     header("Location: ../public/login.php");
     exit;
 }
 
-$user_id = $_SESSION["user_id"];
-$error = "";
+$user_id = (int)$_SESSION["user_id"];
+$error   = "";
+$message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $student_id = $_POST['student_id'];
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
+    $student_id       = $_POST['student_id'];
+    $start_date       = $_POST['start_date'];
+    $end_date         = $_POST['end_date'];
     $permissions_type = $_POST['permissions_type'];
 
+    // Geçmiş tarih kontrolü
     if ($start_date < date('Y-m-d') || $end_date < date('Y-m-d')) {
         $error = "Geçmiş tarih için izin alınamaz.";
     } else {
         // Tarih çakışması kontrolü
-        $check = $pdo->prepare("SELECT * FROM permissions
-            WHERE student_id = ? AND (
-                (start_date <= ? AND end_date >= ?) OR
-                (start_date <= ? AND end_date >= ?) OR
-                (start_date >= ? AND end_date <= ?)
-            )");
-        $check->execute([$student_id, $start_date, $start_date, $end_date, $end_date, $start_date, $end_date]);
-        $overlap = $check->fetch();
+        $check = $pdo->prepare(
+            "SELECT 1 FROM permissions
+             WHERE student_id = ? AND (
+               (start_date <= ? AND end_date >= ?) OR
+               (start_date <= ? AND end_date >= ?) OR
+               (start_date >= ? AND end_date <= ?)
+             )"
+        );
+        $check->execute([
+            $student_id,
+            $start_date, $start_date,
+            $end_date,   $end_date,
+            $start_date, $end_date
+        ]);
 
-        if ($overlap) {
+        if ($check->fetch()) {
             $error = "Bu tarihler arasında zaten izin mevcut.";
         } else {
-            $stmt = $pdo->prepare("INSERT INTO permissions (student_id, start_date, end_date, permissions_type) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$student_id, $start_date, $end_date, $permissions_type]);
-            $permission_id = $pdo->lastInsertId();
+            // Trigger'ın kullanacağı MySQL session değişkenini set et
+            $pdo->exec("SET @current_user_id = {$user_id}");
 
-            $stmt = $pdo->prepare("INSERT INTO permission_created_by (permission_id, user_id) VALUES (?, ?)");
-            $stmt->execute([$permission_id, $user_id]);
+            // Sadece permissions tablosuna insert
+            $stmt = $pdo->prepare(
+                "INSERT INTO permissions
+                 (student_id, start_date, end_date, permissions_type)
+                 VALUES (?, ?, ?, ?)"
+            );
+            $stmt->execute([
+                $student_id,
+                $start_date,
+                $end_date,
+                $permissions_type
+            ]);
 
             $message = "İzin başarıyla kaydedildi.";
         }
     }
 }
 
-$students = $pdo->query("SELECT student_id, first_name, last_name FROM students ORDER BY first_name")->fetchAll();
+// Öğrenci listesini al
+$students = $pdo
+    ->query("SELECT student_id, first_name, last_name FROM students ORDER BY first_name")
+    ->fetchAll();
+
+// Son 3 izni view'den çek
+$recent = $pdo
+    ->query("SELECT * FROM v_recent_permissions LIMIT 3")
+    ->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="tr">

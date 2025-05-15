@@ -1,9 +1,15 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once "../config/db.php";
+
+
+session_start();
+// Bu satırı ekleyin veya değiştirin:
+require_once __DIR__ . '/../config/db.php';
+// artık $pdo hazır
+// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
+
+
+
 
 // Eğer giriş yapılmışsa direkt yönlendir
 if (isset($_SESSION["user_id"])) {

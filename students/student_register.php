@@ -1,6 +1,10 @@
 <?php
 session_start();
-require_once "../config/db.php";
+// Bu satırı ekleyin veya değiştirin:
+require_once __DIR__ . '/../config/db.php';
+// artık $pdo hazır
+// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
+
 
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
     header("Location: ../public/login.php");
