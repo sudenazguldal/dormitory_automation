@@ -1,4 +1,6 @@
 <?php
+
+//view ve trigger kullanıldı
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

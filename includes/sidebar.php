@@ -16,9 +16,11 @@ $role = $_SESSION["role"] ?? "";
         <a href="../students/student_register.php" class="menu-button">Öğrenci Kaydı</a>
         <a href="../permission/permission_approve.php" class="menu-button">İzin Onayla</a>
         <a href="../permission/permission_exceed.php" class="menu-button">İzin Takip</a>
-        <a href="../payments/payment_list.php" class="menu-button">Ödemeler</a>
+        <a href="../payments/list_payment.php" class="menu-button">Bekleyen Ödemeler</a>
+        <a href="../payments/payment_history.php" class="menu-button">Aylık Özet</a>
         
     <?php endif; ?>
 
     <a href="../public/logout.php" class="menu-button">Çıkış Yap</a>
+    
 </div>
