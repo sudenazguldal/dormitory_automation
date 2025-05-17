@@ -1,93 +1,80 @@
 <?php
-
-//view ve trigger kullanıldı
+// permission/permission_create.php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once "../config/db.php";
 
-// Yetki kontrolü
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "security") {
     header("Location: ../public/login.php");
     exit;
 }
 
-$user_id = (int)$_SESSION["user_id"];
-$error   = "";
-$message = "";
+$user_id = $_SESSION["user_id"];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $student_id       = $_POST['student_id'];
-    $start_date       = $_POST['start_date'];
-    $end_date         = $_POST['end_date'];
-    $permissions_type = $_POST['permissions_type'];
+    $student_id = $_POST['student_id'];
+    $start_date = $_POST['start_date'];
+    $end_date = $_POST['end_date'];
+    $type = $_POST['permissions_type'];
 
-    // Geçmiş tarih kontrolü
-    if ($start_date < date('Y-m-d') || $end_date < date('Y-m-d')) {
-        $error = "Geçmiş tarih için izin alınamaz.";
-    } else {
-        // Tarih çakışması kontrolü
-        $check = $pdo->prepare(
-            "SELECT 1 FROM permissions
-             WHERE student_id = ? AND (
-               (start_date <= ? AND end_date >= ?) OR
-               (start_date <= ? AND end_date >= ?) OR
-               (start_date >= ? AND end_date <= ?)
-             )"
-        );
-        $check->execute([
-            $student_id,
-            $start_date, $start_date,
-            $end_date,   $end_date,
-            $start_date, $end_date
-        ]);
+     try {
+        // 1) permissions tablosuna ekle (trigger burada çalışacak)
+        $stmt = $pdo->prepare("
+            INSERT INTO permissions 
+              (student_id, start_date, end_date, permissions_type) 
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$student_id, $start_date, $end_date, $type]);
+        $permission_id = $pdo->lastInsertId();
 
-        if ($check->fetch()) {
-            $error = "Bu tarihler arasında zaten izin mevcut.";
-        } else {
-            // Trigger'ın kullanacağı MySQL session değişkenini set et
-            $pdo->exec("SET @current_user_id = {$user_id}");
+        // 2) permission_created_by ekleme (istersen trigger’a bırakabilirsin)
+        $stmt2 = $pdo->prepare("
+            INSERT INTO permission_created_by 
+              (permission_id, user_id) 
+            VALUES (?, ?)
+        ");
+        $stmt2->execute([$permission_id, $user_id]);
 
-            // Sadece permissions tablosuna insert
-            $stmt = $pdo->prepare(
-                "INSERT INTO permissions
-                 (student_id, start_date, end_date, permissions_type)
-                 VALUES (?, ?, ?, ?)"
-            );
-            $stmt->execute([
-                $student_id,
-                $start_date,
-                $end_date,
-                $permissions_type
-            ]);
-
-            $message = "İzin başarıyla kaydedildi.";
-        }
+        $message = "İzin başarıyla eklendi.";
+    } catch (PDOException $e) {
+        // trigger’dan gelen hata mesajını al
+        $msg = isset($e->errorInfo[2]) 
+             ? $e->errorInfo[2] 
+             : "Beklenmedik bir hata oluştu.";
+        $message = $msg;
     }
 }
 
-// Öğrenci listesini al
-$students = $pdo
-    ->query("SELECT student_id, first_name, last_name FROM students ORDER BY first_name")
-    ->fetchAll();
+// Son 5 izni çek
+$recentPending = $pdo->query("
+    SELECT 
+      permission_id, 
+      student_name, 
+      start_date, 
+      end_date, 
+      permissions_type
+    FROM view_pending_permissions
+")->fetchAll();
 
-// Son 3 izni view'den çek
-$recent = $pdo
-    ->query("SELECT * FROM v_recent_permissions LIMIT 3")
-    ->fetchAll();
+$students = $pdo->query("SELECT student_id, first_name, last_name FROM students ORDER BY first_name ASC")->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>İzin Talebi</title>
-    <link rel="stylesheet" href="../assets/css/sidebar.css">
-    <style>
+  <meta charset="UTF-8">
+  <title>Beklemedeki Faturalar</title>
+  <!-- Sidebar & site genel stilleri -->
+  <link rel="stylesheet" href="../assets/css/sidebar.css">
+  <style>
         body {
             display: flex;
-            margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background-color: #e6f0ff;
+            background: #e6f0ff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
         .main {
@@ -95,115 +82,114 @@ $recent = $pdo
             padding: 30px;
         }
 
-        form {
-            max-width: 500px;
-            margin: auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
         h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #0a2342;
+        }
+         h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         label {
             display: block;
-            margin: 12px 0 6px;
+            margin-top: 12px;
+            font-weight: bold;
         }
 
-        select, input[type="date"] {
+        input, select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
+            margin-top: 6px;
             border-radius: 6px;
             border: 1px solid #ccc;
-            box-sizing: border-box;
         }
 
         button {
             margin-top: 20px;
-            padding: 12px;
+            padding: 10px;
             background-color: #3794ff;
             color: white;
             border: none;
             border-radius: 6px;
-            width: 100%;
+            cursor: pointer;
             font-weight: bold;
         }
 
-        .error, .message {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        .error { color: red; }
-        .message { color: green; }
-            .recent-permissions {
-            max-width: 700px;
-            margin: 40px auto 0;
-        }
-
-        .recent-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .recent-table th, .recent-table td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .recent-table th {
-            background-color: #123060;
+        .sidebar {
+            width: 250px;
+            background-color: #0a2342;
             color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            position: sticky;
+            top: 0;
         }
 
-        .recent-table tr:last-child td {
-            border-bottom: none;
+        /* Tablo stili */
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 30px;
+             margin: 0 auto;
+            
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-
-        .recent-table td {
-            background-color: #f9fbff;
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
         }
-    </style>
-
-
+        th {
+             background-color: #123060;
+             color: white;
+        }
+  </style>
 </head>
 <body>
 <?php include "../includes/sidebar.php"; ?>
+
 <div class="main">
-    <h2>Öğrenci İzin Talebi</h2>
-    <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
-    <?php if (!empty($message)) echo "<p class='message'>$message</p>"; ?>
+    <h2>İzin Talebi Oluştur</h2>
+
+    <?php if (isset($message)) echo "<p style='color: green; text-align: center;'>$message</p>"; ?>
 
     <form method="post">
-        <label>Öğrenci:</label>
+        <label for="student_id">Öğrenci</label>
         <select name="student_id" required>
-            <option value="">Seçiniz...</option>
-            <?php foreach ($students as $s): ?>
-                <option value="<?= $s['student_id'] ?>"><?= htmlspecialchars($s['first_name'] . ' ' . $s['last_name']) ?></option>
+            <option value="">-- Seçin --</option>
+            <?php foreach ($students as $student): ?>
+                <option value="<?= $student['student_id'] ?>">
+                    <?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?>
+                </option>
             <?php endforeach; ?>
         </select>
 
-        <label>Başlangıç Tarihi:</label>
+        <label for="start_date">Başlangıç Tarihi</label>
         <input type="date" name="start_date" required>
 
-        <label>Bitiş Tarihi:</label>
+        <label for="end_date">Bitiş Tarihi</label>
         <input type="date" name="end_date" required>
 
-        <label>İzin Türü:</label>
+        <label for="permissions_type">İzin Türü</label>
         <select name="permissions_type" required>
-            <option value="">Seçiniz...</option>
-            <option value="Weekend">Haftasonu</option>
+            <option value="">-- Seçin --</option>
+            <option value="Weekend">Hafta Sonu</option>
             <option value="Holiday">Tatil</option>
             <option value="Medical">Sağlık</option>
             <option value="Family">Aile</option>
@@ -213,34 +199,30 @@ $recent = $pdo
         <button type="submit">Kaydet</button>
     </form>
 
-    <div class="recent-permissions">
-        <h3 style="text-align:center; margin-top: 40px; color:#0a2342;">Son 3 İzin</h3>
-        <table class="recent-table">
-            <thead>
-                <tr>
-                    <th>Öğrenci</th>
-                    <th>Başlangıç</th>
-                    <th>Bitiş</th>
-                    <th>Tür</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $recent = $pdo->query("SELECT p.start_date, p.end_date, p.permissions_type, s.first_name, s.last_name
-                    FROM permissions p
-                    JOIN students s ON s.student_id = p.student_id
-                    ORDER BY p.permission_id DESC LIMIT 3")->fetchAll();
-                foreach ($recent as $r): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($r['first_name'] . ' ' . $r['last_name']) ?></td>
-                        <td><?= htmlspecialchars($r['start_date']) ?></td>
-                        <td><?= htmlspecialchars($r['end_date']) ?></td>
-                        <td><?= htmlspecialchars($r['permissions_type']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+    <!-- Son 5 izin -->
+    <h3>Son 5 İzin</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Öğrenci</th>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th>Tür</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($recentPermissions as $perm): ?>
+            <tr>
+                <td><?= $perm['permission_id'] ?></td>
+                <td><?= htmlspecialchars($perm['first_name'].' '.$perm['last_name']) ?></td>
+                <td><?= htmlspecialchars($perm['start_date']) ?></td>
+                <td><?= htmlspecialchars($perm['end_date']) ?></td>
+                <td><?= htmlspecialchars($perm['permissions_type']) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

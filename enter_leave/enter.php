@@ -104,6 +104,7 @@ $students = $pdo->query("SELECT s.student_id, s.TC_no, s.first_name, s.last_name
         }
 
         th {
+            
             background-color: #123060;
             color: white;
         }

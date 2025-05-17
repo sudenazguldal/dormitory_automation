@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 require_once "../config/db.php";
 
@@ -11,25 +11,23 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Onayla
-    if (isset($_POST['approve_id'])) {
-        $stmt = $pdo->prepare("SELECT start_date, end_date FROM permissions WHERE permission_id = ?");
-        $stmt->execute([$_POST['approve_id']]);
-        $row = $stmt->fetch();
-
-        if (!$row) {
-            $_SESSION['error_message'] = "İzin bulunamadı.";
-        } elseif ($row['start_date'] < date('Y-m-d')) {
-            $_SESSION['error_message'] = "Geçmiş tarihli izin onaylanamaz.";
-        } elseif ($row['end_date'] < $row['start_date']) {
-            $_SESSION['error_message'] = "Bitiş tarihi başlangıç tarihinden önce olamaz.";
-        } else {
-            $stmt = $pdo->prepare("INSERT IGNORE INTO permission_approved_by (permission_id, user_id, approved_at) VALUES (?, ?, NOW())");
-            $stmt->execute([$_POST['approve_id'], $_SESSION["user_id"]]);
-            $_SESSION['success_message'] = "İzin başarıyla onaylandı.";
-        }
-        header("Location: permission_approve.php");
-        exit;
-    }
+   if (isset($_POST['approve_id'])) {
+  try {
+    $ins = $pdo->prepare("
+      INSERT INTO permission_approved_by 
+        (permission_id, user_id, approved_at)
+      VALUES (?, ?, NOW())
+    ");
+    $ins->execute([$_POST['approve_id'], $_SESSION['user_id']]);
+    $_SESSION['success_message'] = "İzin başarıyla onaylandı.";
+  } catch (PDOException $e) {
+    // trigger’dan gelen özel mesajı al (ör. "Başlangıç tarihi bugünden önce olamaz…")
+    $msg = isset($e->errorInfo[2]) ? $e->errorInfo[2] : $e->getMessage();
+    $_SESSION['error_message'] = $msg;
+}
+  header("Location: permission_approve.php");
+  exit;
+}
 
     // Düzenle
     if (isset($_POST['edit_id'], $_POST['edit_start'], $_POST['edit_end'], $_POST['edit_type'])) {
@@ -39,24 +37,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (empty($edit_start) || empty($edit_end)) {
             $_SESSION['error_message'] = "Tarih alanları boş bırakılamaz.";
-        } elseif ($edit_start < date('Y-m-d')) {
-            $_SESSION['error_message'] = "Geçmiş tarih için izin düzenlenemez.";
-        } elseif ($edit_end < $edit_start) {
-            $_SESSION['error_message'] = "Bitiş tarihi başlangıç tarihinden önce olamaz.";
         } else {
-            $stmt = $pdo->prepare("
-                UPDATE permissions
-                SET start_date = ?, end_date = ?, permissions_type = ?
-                WHERE permission_id = ?
-            ");
-            $stmt->execute([
-                $edit_start,
-                $edit_end,
-                $edit_type,
-                $_POST['edit_id']
-            ]);
-            $_SESSION['success_message'] = "İzin başarıyla güncellendi.";
-        }
+            try {
+                $stmt = $pdo->prepare("
+                    UPDATE permissions
+                    SET start_date = ?, end_date = ?, permissions_type = ?
+                    WHERE permission_id = ?
+                ");
+                $stmt->execute([
+                    $edit_start,
+                    $edit_end,
+                    $edit_type,
+                    $_POST['edit_id']
+                ]);
+                $_SESSION['success_message'] = "İzin başarıyla güncellendi.";
+            } catch (PDOException $e) {
+        // trigger’dan gelen özel mesajı al (ör. "Başlangıç tarihi bugünden önce olamaz…")
+         $msg = isset($e->errorInfo[2]) ? $e->errorInfo[2] : $e->getMessage();
+         $_SESSION['error_message'] = $msg;
+}
         header("Location: permission_approve.php");
         exit;
     }
@@ -94,33 +93,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 }
+} // <-- Add this closing brace to properly end the main if ($_SERVER["REQUEST_METHOD"] === "POST") block
 
-// Bekleyen izinler (her öğrencinin yalnızca en son isteği)
-$permissions = $pdo->query("
-    SELECT p.permission_id, s.first_name, s.last_name,
-           p.start_date, p.end_date, p.permissions_type
-    FROM permissions p
-    JOIN students s ON s.student_id = p.student_id
-    LEFT JOIN permission_approved_by a ON a.permission_id = p.permission_id
-    WHERE a.permission_id IS NULL
-      AND p.permission_id = (
-          SELECT MAX(p2.permission_id)
-          FROM permissions p2
-          WHERE p2.student_id = p.student_id
-      )
-    ORDER BY p.start_date ASC
-")->fetchAll();
+// ——— Burada artık VIEW’ları kullanıyoruz ———
 
-// Onaylı son 5 izin
-$approved = $pdo->query("
-    SELECT p.permission_id, s.first_name, s.last_name,
-           p.start_date, p.end_date, p.permissions_type
-    FROM permissions p
-    JOIN students s ON s.student_id = p.student_id
-    JOIN permission_approved_by a ON a.permission_id = p.permission_id
-    ORDER BY a.approved_at DESC
-    LIMIT 5
-")->fetchAll();
+// 1) Bekleyen izinler (VIEW: view_pending_permissions)
+$permissions = $pdo
+    ->query("SELECT permission_id, student_name, start_date, end_date, permissions_type
+             FROM view_pending_permissions
+             ORDER BY start_date ASC")
+    ->fetchAll();
+
+// 2) Onaylı son 5 izin (VIEW: view_recent_approvals)
+$approved = $pdo
+    ->query("SELECT permission_id, student_name, start_date, end_date, permissions_type
+             FROM view_recent_approvals")
+    ->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -129,6 +117,7 @@ $approved = $pdo->query("
     <title>İzin Onayı</title>
     <link rel="stylesheet" href="../assets/css/sidebar.css">
     <style>
+      
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
@@ -240,7 +229,6 @@ $approved = $pdo->query("
         </div>
     <?php endif; ?>
 
-    
     <!-- Bekleyen İzinler -->
     <h2>Onay Bekleyen İzinler</h2>
     <table>
@@ -257,7 +245,7 @@ $approved = $pdo->query("
             <?php foreach ($permissions as $perm): ?>
                 <tr>
                     <form method="post">
-                        <td><?= htmlspecialchars($perm['first_name'] . ' ' . $perm['last_name']) ?></td>
+                        <td><?= htmlspecialchars($perm['student_name']) ?></td>
                         <td><input type="date"   name="edit_start" value="<?= $perm['start_date'] ?>" required></td>
                         <td><input type="date"   name="edit_end"   value="<?= $perm['end_date']   ?>" required></td>
                         <td>
@@ -271,9 +259,9 @@ $approved = $pdo->query("
                             </select>
                         </td>
                         <td>
-                            <input type="hidden" name="edit_id"      value="<?= $perm['permission_id'] ?>">
+                            <input type="hidden" name="edit_id"    value="<?= $perm['permission_id'] ?>">
                             <button type="submit">Güncelle</button>
-                            <button type="submit" name="approve_id"  value="<?= $perm['permission_id'] ?>">
+                            <button type="submit" name="approve_id" value="<?= $perm['permission_id'] ?>">
                                 Onayla
                             </button>
                         </td>
@@ -283,16 +271,15 @@ $approved = $pdo->query("
         </tbody>
     </table>
 
-   <!-- Estetik silme formları -->
-    
-<div class="select-delete">
+    <!-- Estetik silme formları -->
+    <div class="select-delete">
         <form method="post">
             <label for="delete_unapproved_id">Onaysız izni sil:</label>
             <select name="delete_unapproved_id" required>
                 <option value="" disabled selected>İzin seçiniz</option>
                 <?php foreach ($permissions as $perm): ?>
                     <option value="<?= $perm['permission_id'] ?>">
-                        <?= htmlspecialchars($perm['first_name'] . ' ' . $perm['last_name']) ?>
+                        <?= htmlspecialchars($perm['student_name']) ?>
                         &nbsp;|&nbsp;
                         <?= $perm['start_date'] ?>—<?= $perm['end_date'] ?>
                     </option>
@@ -301,6 +288,7 @@ $approved = $pdo->query("
             <button type="submit" class="danger">Sil</button>
         </form>
     </div>
+
     <!-- Onaylanmış Son 5 İzin -->
     <h2>Onaylanmış Son 5 İzin</h2>
     <table>
@@ -316,7 +304,7 @@ $approved = $pdo->query("
         <tbody>
             <?php foreach ($approved as $perm): ?>
                 <tr>
-                    <td><?= htmlspecialchars($perm['first_name'] . ' ' . $perm['last_name']) ?></td>
+                    <td><?= htmlspecialchars($perm['student_name']) ?></td>
                     <td><?= htmlspecialchars($perm['start_date']) ?></td>
                     <td><?= htmlspecialchars($perm['end_date']) ?></td>
                     <td><?= htmlspecialchars($perm['permissions_type']) ?></td>
@@ -331,18 +319,15 @@ $approved = $pdo->query("
         </tbody>
     </table>
 
-
     <!-- Estetik silme formları -->
-
-
-     <div class="select-delete">
+    <div class="select-delete">
         <form method="post">
             <label for="delete_selected_id">Onaylı izni sil:</label>
             <select name="delete_selected_id" required>
                 <option value="" disabled selected>İzin seçiniz</option>
                 <?php foreach ($approved as $perm): ?>
                     <option value="<?= $perm['permission_id'] ?>">
-                        <?= htmlspecialchars($perm['first_name'] . ' ' . $perm['last_name']) ?>
+                        <?= htmlspecialchars($perm['student_name']) ?>
                         &nbsp;|&nbsp;
                         <?= $perm['start_date'] ?>—<?= $perm['end_date'] ?>
                     </option>
@@ -350,7 +335,7 @@ $approved = $pdo->query("
             </select>
             <button type="submit" class="danger">Sil</button>
         </form>
-        </div>
+    </div>
 
 </div>
 
