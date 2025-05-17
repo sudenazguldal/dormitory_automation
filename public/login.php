@@ -1,6 +1,11 @@
 <?php
 
-
+// Eğer .installed yoksa, kurulum yap
+if (! file_exists(__DIR__ . '/../.installed')) {
+    require __DIR__ . '/../install.php';
+    // install.php bittiğinde devam etmesine gerek yok
+    exit;
+}
 
 session_start();
 // Bu satırı ekleyin veya değiştirin:
@@ -74,10 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             width: 100%;
             max-width: 400px;
-             position: absolute;  
-            top: 50%;            /* düşeyde ortalar */
-            transform: translateY(-50%); /* düşey hizalamayı tam ortalamak için gerekli */
-            left: 750px;         /* yatay konumu istediğin gibi ayarla */
+             position: absolute;   
+            top: 50%;                           /* düşeyde ortalar */
+            transform: translateY(-50%);        /* düşey hizalamayı tam ortalamak için gerekli */
+            left: 750px;                        /* yatay konumu istediğin gibi ayarla */
 
         }
 
