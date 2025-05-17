@@ -1,18 +1,15 @@
 <?php
 
-// Eğer .installed yoksa, kurulum yap
+
+// 1) Eğer henüz .installed yoksa kurulum yap
 if (! file_exists(__DIR__ . '/../.installed')) {
     require __DIR__ . '/../install.php';
-    // install.php bittiğinde devam etmesine gerek yok
-    exit;
+    exit;  // kurulum bittiğinde sayfa yeniden yüklenebilir
 }
 
-session_start();
-// Bu satırı ekleyin veya değiştirin:
+// 2) Veritabanı şimdi var; PDO bağlan
 require_once __DIR__ . '/../config/db.php';
-// artık $pdo hazır
-// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
-
+session_start();
 
 
 

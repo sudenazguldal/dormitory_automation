@@ -7,6 +7,8 @@
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
+
+-- --------------------------------------------------------
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -20,7 +22,9 @@ SET time_zone = "+00:00";
 --
 -- Veritabanı: `dormitory_database`
 --
-
+CREATE DATABASE IF NOT EXISTS `dormitory_database`
+  DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `dormitory_database`;
 DELIMITER $$
 --
 -- Yordamlar
