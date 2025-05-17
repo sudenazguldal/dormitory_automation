@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             background: linear-gradient(135deg, #1d3557, #457b9d);
             height: 100vh;
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
             color: #333;
         }
@@ -74,6 +74,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             width: 100%;
             max-width: 400px;
+             position: absolute;  
+            top: 50%;            /* düşeyde ortalar */
+            transform: translateY(-50%); /* düşey hizalamayı tam ortalamak için gerekli */
+            left: 750px;         /* yatay konumu istediğin gibi ayarla */
+
         }
 
         .login-box h2 {
@@ -108,6 +113,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             background-color: #274c77;
         }
 
+        .logo-container {
+             position: absolute;  
+    top: 50%;            /* düşeyde ortalar */
+    transform: translateY(-50%); /* düşey hizalamayı tam ortalamak için gerekli */
+    left: 250px;         /* yatay konumu istediğin gibi ayarla */
+            padding: 20px;
+            background-color:white;
+             border-radius: 12px;
+        }
+
+        .logo-container img {
+            max-width: 250px;
+            height: auto;
+        }
+
         .error {
             color: red;
             text-align: center;
@@ -116,6 +136,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </style>
 </head>
 <body>
+    <div class="logo-container">
+        <img src="../assets/images/logo.png" alt="Logo">
+    </div>
+
     <div class="login-box">
         <h2>Yurt Giriş Sistemi</h2>
         <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
@@ -127,3 +151,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 </body>
 </html>
+

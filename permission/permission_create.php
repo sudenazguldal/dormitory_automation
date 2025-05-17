@@ -144,7 +144,7 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
             border-collapse: collapse;
             margin-top: 30px;
              margin: 0 auto;
-            
+          
             background: white;
             padding: 20px;
             border-radius: 8px;
@@ -212,10 +212,10 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($recentPermissions as $perm): ?>
+        <?php foreach ($recentPending as $perm): ?>
             <tr>
                 <td><?= $perm['permission_id'] ?></td>
-                <td><?= htmlspecialchars($perm['first_name'].' '.$perm['last_name']) ?></td>
+                <td><?= htmlspecialchars($perm['student_name']) ?></td>
                 <td><?= htmlspecialchars($perm['start_date']) ?></td>
                 <td><?= htmlspecialchars($perm['end_date']) ?></td>
                 <td><?= htmlspecialchars($perm['permissions_type']) ?></td>
