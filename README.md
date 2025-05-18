@@ -26,7 +26,7 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
   ![pers](assets/images/perm_follw.png)
   ![pers](assets/images/total_perm.png)
   
-  * -Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylanabilir veya silinebilir. 45 günden fazla izin kullanmış öğrenciler takip edilir.
+  * -Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylayabilir veya silebilir. 45 günden fazla izin kullanmış öğrenciler takip edilir.
 
 
 * ### **Fatura & Ödeme Modülü**: 
