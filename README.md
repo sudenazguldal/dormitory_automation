@@ -1,20 +1,18 @@
 # dormitory_automation 
-# Yurt Otomasyon Sistemi
+# Yurt Otomasyon Sistemi - Ocean Breeze
 
-Öğrenci yurdu işlemlerini yönetmek için web tabanlı uygulama, Güvenlik ve Öğrenci İşleri personeli için ayrı arayüzler sunar. Özellikler arasında giriş/çıkış takibi, izin talepleri, fatura ve ödeme yönetimi ile gerçek zamanlı panolar bulunmaktadır.
+Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçlerini web tabanlı olarak yöneten PHP/MySQL tabanlı bir uygulamadır.
 
 ## Özellikler
 
 * **Kimlik Doğrulama & Yetkilendirme**: `security` ve `students_affair` rollerine özel güvenli giriş.
 * **Giriş/Çıkış Takibi**: Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.
-* **İzin Yönetimi**: Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylayıp reddedebilir.
-* **Fatura & Ödeme Modülü**: Yeni kayıtlarda otomatik fatura oluşturma; tam ödeme sonrası fatura durumu güncellenir.
-* **Gerçek Zamanlı Panolar**:
+* **İzin Yönetimi**: Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylanabilir veya silinebilir. 45 günden fazla izin kullanmış öğrenciler takip edilir.
+* **Fatura & Ödeme Modülü**: Öğrencilerin yurt ödemeleri takip edilir; aylık olarak fatura oluşturulur; yeni kayıtlarda o ayın faturası otomatik olarak fatura oluşturma.
+* **Öğrenci ekleme**: Yeni öğrenci kaydı yapılır.
+* **Öğrenci listeleme**:kayıtlı olan öğrencilerin
+* **Öğrenci oda takibi**: Öğrenci yeni eklendiğinde oda ve yatak nosu atanır; isteğe göre oda değişikliği yapılır.
 
-  * Son 5 işlem listesi
-  * Bekleyen izin talepleri görünümü
-  * Ödeme özetleri ve uyarılar
-* **Otomatik Tetikleyiciler**: Fatura ID’si doldurma, oluşturma/onaylama işlemlerini loglama ve durum güncellemeleri için MySQL trigger’ları.
 
 ## Teknolojiler
 
