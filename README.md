@@ -50,7 +50,7 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 
 
 
-* * ### **Öğrenci oda takibi**:
+* ### **Öğrenci oda takibi**:
   ![add](assets/images/beds.png)
   
   *  -Öğrenci yeni eklendiğinde oda ve yatak nosu atanır; isteğe göre oda değişikliği yapılır.
