@@ -21,8 +21,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
   <meta charset="UTF-8">
-  <title>Beklemedeki Faturalar</title>
-  <
+  <title>Fatura Ödeme #<?= $inv['invoice_id'] ?></title>
   <link rel="stylesheet" href="../assets/css/sidebar.css">
   <style>
     html,
@@ -41,18 +40,19 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     body {
       display: flex;
       /* Body’yi bir Flex konteyneri yapar */
-      min-height: 100vh;
+      min-height: 90vh;
       /* Görünür pencere yüksekliğinin tamamı kadar (en az) */
       overflow: hidden;
       /* Taşan içeriği gizler; kaydırma çubuklarını gizler */
     }
 
-    
+
+
 
     main {
       flex: 1;
       /* Body içindeki yan yana duran sidebar + main’da main, kalan tüm alanı kaplasın */
-      
+
       display: flex;
       /* main’i de Flex konteynerine çevirir */
       flex-direction: column;
@@ -63,7 +63,8 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       /* main’in kenarlarında iç boşluk bırakır */
     }
 
-  
+
+
 
     main h2 {
       color: #0a2342;
@@ -78,10 +79,11 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     main table {
-      width: 80%;
-      /* Ana alanın %80 genişliğini kaplar */
-      margin: 0 auto 30px;
-      /* Üst 0px, yatay otomatik ortala, alt 30px boşluk */
+      width: 250px;
+      /* Tablo genişliği 250px */
+
+      margin: 0px auto 30px;
+      /* Üst 0px, yatay otomatik (ortala), alt 30px boşluk */
       border-collapse: collapse;
       /* Hücre kenarlıkları birleşik görünür */
       background: #fff;
@@ -94,9 +96,10 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     main td {
       border: 1px solid #ddd;
       /* İnce gri kenarlık */
-      padding: 8px 12px;
+      padding: 12px 42px;
       /* Hücre içi boşluk: üst-alt 8px, sağ-sol 12px */
       text-align: left;
+      text-size-adjust: auto;
       /* Hücre içeriğini sola hizalar */
     }
 
@@ -113,9 +116,14 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     .btn-pay {
-      display: inline-block;
-      /* Satır içi blok, padding ve margin alır */
-      padding: 4px 8px;
+      display: block;
+      margin: 0 auto;
+      justify-content: center;
+      /* Yatayda ortala */
+      align-items: center;
+      /* Dikeyde ortala */
+      align-items: center;
+      padding: 10px 10px;
       /* Butonun iç boşluğu: üst-alt 4px, sağ-sol 8px */
       background: #007bff;
       /* Mavi buton zemin rengi */
@@ -133,6 +141,8 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
   </style>
 </head>
+
+
 
 <body>
   <?php include "../includes/sidebar.php"; ?>
