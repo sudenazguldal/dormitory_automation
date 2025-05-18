@@ -5,8 +5,8 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 
 ## Özellikler
 
-* **Kimlik Doğrulama & Yetkilendirme**: `security` ve `students_affair` rollerine özel güvenli giriş.
-* [](assets/images/security.png)
+* ##**Kimlik Doğrulama & Yetkilendirme**
+* [`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/security.png)
 * **Giriş/Çıkış Takibi**: Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.
 * **İzin Yönetimi**: Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylanabilir veya silinebilir. 45 günden fazla izin kullanmış öğrenciler takip edilir.
 * **Fatura & Ödeme Modülü**: Öğrencilerin yurt ödemeleri takip edilir; aylık olarak fatura oluşturulur; yeni kayıtlarda o ayın faturası otomatik olarak fatura oluşturma.
