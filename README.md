@@ -135,8 +135,6 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 ├── public/                # Giriş ve dashboard sayfaları
 ├── config/                # Veritabanı bağlantı ayarları
 │   └── db.php             # PDO ile bağlantı yapılandırması
-├── schema.sql             # Veritabanı şeması (CREATE TABLE, INDEX, TRIGGER tanımları)
-├── data.sql               # Başlangıç verileri (INSERT komutları)
 ├── permissions/           # İzin talepleri modülleri
 ├── payments/              # Fatura ve ödeme modülleri
 ├── students/              # Öğrenci kayıt ve yatak atama modülleri
