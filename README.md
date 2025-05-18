@@ -74,8 +74,6 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 
 ## Kurulum
 
-## Kurulum
-
 1. **Veritabanı Oluşturun**  
    - phpMyAdmin’e giriş yapın.  
    - “Yeni” → veritabanı adı olarak `dormitory_database` yazıp **Oluştur**’a tıklayın.
