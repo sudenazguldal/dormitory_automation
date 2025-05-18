@@ -14,10 +14,10 @@ try {
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
-    // Bağlantı başarılıysa sessize alın
+    // Bağlantı başarılıysa sessize al
     // echo "✅ Bağlantı başarılı!";
 } catch (PDOException $e) {
-    // Hata varsa öldürür ve mesajı gösterir
+    // Hata varsa öldürme ve mesajı gösterme
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
 
