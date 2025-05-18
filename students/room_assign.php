@@ -1,11 +1,11 @@
 <?php
-// students/room_assign.php
+
 session_start();
 require_once __DIR__ . '/../config/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../public/login.php');
-    exit;
+  header('Location: ../public/login.php');
+  exit;
 }
 
 $student_id = isset($_GET['student_id']) ? (int)$_GET['student_id'] : 0;
@@ -43,14 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($_POST['action'] === 'assign') {
     $bed_id = (int)$_POST['bed_id'];
     $pdo->prepare("INSERT INTO room_assignments (student_id, bed_id) VALUES (?,?)")
-        ->execute([$student_id, $bed_id]);
+      ->execute([$student_id, $bed_id]);
     header("Location: room_assign.php?student_id=$student_id&ok=assign");
     exit;
   }
   if ($_POST['action'] === 'change') {
     $new_bed = (int)$_POST['bed_id'];
     $pdo->prepare("UPDATE room_assignments SET bed_id=? WHERE room_assignments_id=?")
-        ->execute([$new_bed, $current['room_assignments_id']]);
+      ->execute([$new_bed, $current['room_assignments_id']]);
     header("Location: room_assign.php?student_id=$student_id&ok=change");
     exit;
   }
@@ -58,49 +58,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
   <meta charset="UTF-8">
-  <title>Oda İşlemleri — <?= htmlspecialchars($student['first_name'].' '.$student['last_name']) ?></title>
+  <title>Oda İşlemleri — <?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?></title>
   <link rel="stylesheet" href="../assets/css/sidebar.css">
   <style>
-    
-    body { display: flex; 
-        font-family: 'Segoe UI', sans-serif; 
-        min-height: 100vh; 
-        background: #e6f0ff;
-        box-sizing: border-box; 
-        margin:0; padding:0; }
-    
-    main { flex:1; padding: 30px; }
+    body {
+      display: flex;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: #e6f0ff;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    main {
+      flex: 1;
+      padding: 30px;
+    }
 
     .card {
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       padding: 44px;
       margin-bottom: 40px;
-       margin: 0 auto 20px;      /* otomatik yatay ortalama */
-    max-width: 1000px;  
+      margin: 0 auto 20px;
+      max-width: 1000px;
     }
-    h2 { margin-bottom: 36px; 
-        color: #333;
-          }
-    h3 { margin-bottom: 12px; color: #555;
-     }
+
+    h2 {
+      margin-bottom: 36px;
+      color: #333;
+    }
+
+    h3 {
+      margin-bottom: 12px;
+      color: #555;
+    }
 
     .student-info {
       font-size: 1.95rem;
       margin-bottom: 24px;
       color: #1d3557;
       text-align: center;
-         margin-bottom: 20px;
+      margin-bottom: 20px;
     }
-    .student-info strong {  color: #1d3557;
-}
 
-    form { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
-    label { flex:1; display: flex; flex-direction: column; font-size: 0.9rem; color: #333; }
-    select { margin-top: 6px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    .student-info strong {
+      color: #1d3557;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    label {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    select {
+
+      margin-top: 6px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
     .btn {
       padding: 10px 18px;
       border: none;
@@ -109,14 +142,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       cursor: pointer;
       transition: background 0.2s;
     }
+
     .btn-primary {
-      background: #007bff; color: #fff;
+      background: #007bff;
+      color: #fff;
     }
-    .btn-primary:hover { background: #0056b3; }
+
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+
     .btn-secondary {
-      background: #6c757d; color: #fff;
+      background: #6c757d;
+      color: #fff;
     }
-    .btn-secondary:hover { background: #5a6268; }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
 
     .message {
       padding: 12px;
@@ -124,8 +167,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       margin-bottom: 20px;
       font-size: 0.9rem;
     }
-    .msg-success { background: #e6ffed; border: 1px solid #b2f2bb; color: #2f855a; }
-    .msg-info    { background: #e9ecef; border: 1px solid #ced4da; color: #495057; }
+
+    .msg-success {
+      background: #e6ffed;
+      border: 1px solid #b2f2bb;
+      color: #2f855a;
+    }
+
+    .msg-info {
+      background: #e9ecef;
+      border: 1px solid #ced4da;
+      color: #495057;
+    }
 
     .back-link {
       display: inline-block;
@@ -134,26 +187,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       text-decoration: none;
       font-size: 0.9rem;
     }
-    .back-link:hover { text-decoration: underline; }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
+
 <body>
 
-  <!-- SIDEBAR -->
- <?php include "../includes/sidebar.php"; ?>
+  <?php include "../includes/sidebar.php"; ?>
 
-  <!-- MAIN -->
   <main>
     <h2>Oda Atama</h2>
 
-    <!-- Öğrenci Bilgisi -->
+    <!-- Öğrenci bilgisi -->
     <div class="student-info">
-      <strong><?= htmlspecialchars($student['first_name'].' '.$student['last_name']) ?></strong>
+      <strong><?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?></strong>
       &mdash; TC: <?= htmlspecialchars($student['TC_no']) ?>
       &mdash; Tel: <?= htmlspecialchars($student['stud_telNo'] ?? '—') ?>
     </div>
 
-    <!-- Başarı Mesajı -->
+    <!-- Başarı mesajı -->
     <?php if (!empty($_GET['ok'])): ?>
       <div class="message msg-success">
         <?= $_GET['ok'] === 'assign' ? 'Oda başarıyla atandı!' : 'Oda başarıyla değiştirildi!' ?>
@@ -162,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="card">
       <?php if (!$current): ?>
-        <!-- İlk Atama -->
+        <!-- İlk atama -->
         <h3>Yeni Oda Atama</h3>
         <?php if (empty($availableBeds)): ?>
           <div class="message msg-info">Şu anda boş yatak bulunmuyor.</div>
@@ -186,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
       <?php else: ?>
-        <!-- Mevcut Atama ve Değiştirme -->
+        <!-- Mevcut atama ve değiştirme -->
         <h3>Mevcut Atama</h3>
         <p>
           Oda: <strong><?= htmlspecialchars($current['room_number']) ?></strong>,
@@ -223,4 +278,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </main>
 
 </body>
+
 </html>

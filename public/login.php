@@ -3,10 +3,9 @@
 
 
 session_start();
-// Bu satırı ekleyin veya değiştirin:
+
 require_once __DIR__ . '/../config/db.php';
-// artık $pdo hazır
-// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
+
 
 
 
@@ -48,9 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
-<!-- Giriş Formu (HTML) -->
+
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <title>Yurt Giriş Paneli</title>
@@ -71,13 +71,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             background-color: white;
             padding: 40px 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
-             position: absolute;  
-            top: 50%;            /* düşeyde ortalar */
-            transform: translateY(-50%); /* düşey hizalamayı tam ortalamak için gerekli */
-            left: 750px;         /* yatay konumu istediğin gibi ayarla */
+            position: absolute;
+            top: 50%;
+            /* düşeyde ortalar */
+            transform: translateY(-50%);
+            /* düşey hizalamayı tam ortalamak için gerekli */
+            left: 750px;
+            /* yatay konumu istediğin gibi ayarla */
 
         }
 
@@ -114,13 +117,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         .logo-container {
-             position: absolute;  
-    top: 50%;            /* düşeyde ortalar */
-    transform: translateY(-50%); /* düşey hizalamayı tam ortalamak için gerekli */
-    left: 250px;         /* yatay konumu istediğin gibi ayarla */
+            position: absolute;
+            top: 50%;
+            /* düşeyde ortalama */
+            transform: translateY(-50%);
+            /* düşey hizalamayı tam ortalamak için gerekli */
+            left: 250px;
+            /* yatay konumu istediğin gibi ayarlama */
             padding: 20px;
-            background-color:white;
-             border-radius: 12px;
+            background-color: white;
+            border-radius: 12px;
         }
 
         .logo-container img {
@@ -135,6 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     </style>
 </head>
+
 <body>
     <div class="logo-container">
         <img src="../assets/images/logo.png" alt="Logo">
@@ -150,5 +157,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
     </div>
 </body>
-</html>
 
+</html>

@@ -1,9 +1,9 @@
 <?php
-// students/list_it.php
+
 session_start();
 require_once __DIR__ . '/../config/db.php';
 
-// Öğrenciler + varsa oda & yatak bilgisi
+// Öğrenciler , varsa oda & yatak bilgisi
 $sql = "
   SELECT
     s.student_id,
@@ -22,47 +22,56 @@ $students = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
   <meta charset="UTF-8">
   <title>Öğrenci Listesi</title>
   <link rel="stylesheet" href="../assets/css/sidebar.css">
   <style>
-    
+    html,
+    body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-    html, body { height: 100%; font-family: 'Segoe UI', sans-serif; }
+    body {
+      display: flex;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: #e6f0ff;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    /* Flex konteynerine çeviriyoruz */
-    body { display: flex; 
-        font-family: 'Segoe UI', sans-serif; 
-        min-height: 100vh; 
-        background: #e6f0ff;
-        box-sizing: border-box; 
-        margin:0; padding:0;}
 
-    
 
-    /* Main içerik flex:1 ile kalan alanı kaplasın */
     main.content {
       flex: 1;
       padding: 30px;
-      
+
     }
 
-    h2 {  color: #0a2342;
-            text-align: center;
-            margin-bottom: 20px; }
+    h2 {
+      color: #0a2342;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
     table {
       width: 100%;
       border-collapse: collapse;
       background: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     }
-    th, td {
+
+    th,
+    td {
       border: 1px solid #ddd;
       padding: 8px 12px;
       text-align: left;
     }
+
     th {
       background-color: #123060;
       font-weight: 600;
@@ -78,13 +87,15 @@ $students = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
       text-decoration: none;
       border-radius: 4px;
     }
+
     .btn:hover {
       background: #0056b3;
     }
   </style>
 </head>
+
 <body>
-    <?php include "../includes/sidebar.php"; ?>
+  <?php include "../includes/sidebar.php"; ?>
 
 
   <!-- 2) Main İçerik -->
@@ -111,19 +122,18 @@ $students = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
           </tr>
         <?php else: ?>
           <?php foreach ($students as $st): ?>
-          <tr>
-            <td><?= htmlspecialchars($st['full_name']) ?></td>
-            <td><?= htmlspecialchars($st['tc_no']) ?></td>
-            <td><?= htmlspecialchars($st['phone']     ?? '—') ?></td>
-            <td><?= htmlspecialchars($st['room_number'] ?? '—') ?></td>
-            <td><?= htmlspecialchars($st['bed_no']      ?? '—') ?></td>
-            <td>
-              <a
-                href="room_assign.php?student_id=<?= $st['student_id'] ?>"
-                class="btn"
-              >Oda Atama</a>
-            </td>
-          </tr>
+            <tr>
+              <td><?= htmlspecialchars($st['full_name']) ?></td>
+              <td><?= htmlspecialchars($st['tc_no']) ?></td>
+              <td><?= htmlspecialchars($st['phone']     ?? '—') ?></td>
+              <td><?= htmlspecialchars($st['room_number'] ?? '—') ?></td>
+              <td><?= htmlspecialchars($st['bed_no']      ?? '—') ?></td>
+              <td>
+                <a
+                  href="room_assign.php?student_id=<?= $st['student_id'] ?>"
+                  class="btn">Oda Atama</a>
+              </td>
+            </tr>
           <?php endforeach; ?>
         <?php endif; ?>
       </tbody>
@@ -131,4 +141,5 @@ $students = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
   </main>
 
 </body>
+
 </html>

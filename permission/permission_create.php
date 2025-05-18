@@ -1,5 +1,5 @@
 <?php
-// permission/permission_create.php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -18,8 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $end_date = $_POST['end_date'];
     $type = $_POST['permissions_type'];
 
-     try {
-        // 1) permissions tablosuna ekle (trigger burada çalışacak)
+    try {
+        //permissions tablosuna ekle 
         $stmt = $pdo->prepare("
             INSERT INTO permissions 
               (student_id, start_date, end_date, permissions_type) 
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->execute([$student_id, $start_date, $end_date, $type]);
         $permission_id = $pdo->lastInsertId();
 
-        // 2) permission_created_by ekleme (istersen trigger’a bırakabilirsin)
+        //permission_created_by ekleme 
         $stmt2 = $pdo->prepare("
             INSERT INTO permission_created_by 
               (permission_id, user_id) 
@@ -38,10 +38,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message = "İzin başarıyla eklendi.";
     } catch (PDOException $e) {
-        // trigger’dan gelen hata mesajını al
-        $msg = isset($e->errorInfo[2]) 
-             ? $e->errorInfo[2] 
-             : "Beklenmedik bir hata oluştu.";
+        // trigger’dan gelen hata mesajını almek için
+        $msg = isset($e->errorInfo[2])
+            ? $e->errorInfo[2]
+            : "Beklenmedik bir hata oluştu.";
         $message = $msg;
     }
 }
@@ -62,12 +62,13 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
 
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Beklemedeki Faturalar</title>
-  <!-- Sidebar & site genel stilleri -->
-  <link rel="stylesheet" href="../assets/css/sidebar.css">
-  <style>
+    <meta charset="UTF-8">
+    <title>Beklemedeki Faturalar</title>
+    <!-- Sidebar & site genel stilleri -->
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <style>
         body {
             display: flex;
             font-family: 'Segoe UI', sans-serif;
@@ -86,7 +87,8 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
             text-align: center;
             margin-bottom: 20px;
         }
-         h3 {
+
+        h3 {
             text-align: center;
             margin-bottom: 10px;
         }
@@ -97,7 +99,7 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         label {
@@ -106,7 +108,8 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
             font-weight: bold;
         }
 
-        input, select {
+        input,
+        select {
             width: 100%;
             padding: 8px;
             margin-top: 6px;
@@ -143,86 +146,91 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
             width: 80%;
             border-collapse: collapse;
             margin-top: 30px;
-             margin: 0 auto;
-          
+            margin: 0 auto;
+
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ccc;
             padding: 8px;
             text-align: left;
         }
+
         th {
-             background-color: #123060;
-             color: white;
+            background-color: #123060;
+            color: white;
         }
-  </style>
+    </style>
 </head>
+
 <body>
-<?php include "../includes/sidebar.php"; ?>
+    <?php include "../includes/sidebar.php"; ?>
 
-<div class="main">
-    <h2>İzin Talebi Oluştur</h2>
+    <div class="main">
+        <h2>İzin Talebi Oluştur</h2>
 
-    <?php if (isset($message)) echo "<p style='color: green; text-align: center;'>$message</p>"; ?>
+        <?php if (isset($message)) echo "<p style='color: green; text-align: center;'>$message</p>"; ?>
 
-    <form method="post">
-        <label for="student_id">Öğrenci</label>
-        <select name="student_id" required>
-            <option value="">-- Seçin --</option>
-            <?php foreach ($students as $student): ?>
-                <option value="<?= $student['student_id'] ?>">
-                    <?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+        <form method="post">
+            <label for="student_id">Öğrenci</label>
+            <select name="student_id" required>
+                <option value="">-- Seçin --</option>
+                <?php foreach ($students as $student): ?>
+                    <option value="<?= $student['student_id'] ?>">
+                        <?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-        <label for="start_date">Başlangıç Tarihi</label>
-        <input type="date" name="start_date" required>
+            <label for="start_date">Başlangıç Tarihi</label>
+            <input type="date" name="start_date" required>
 
-        <label for="end_date">Bitiş Tarihi</label>
-        <input type="date" name="end_date" required>
+            <label for="end_date">Bitiş Tarihi</label>
+            <input type="date" name="end_date" required>
 
-        <label for="permissions_type">İzin Türü</label>
-        <select name="permissions_type" required>
-            <option value="">-- Seçin --</option>
-            <option value="Weekend">Hafta Sonu</option>
-            <option value="Holiday">Tatil</option>
-            <option value="Medical">Sağlık</option>
-            <option value="Family">Aile</option>
-            <option value="Another">Diğer</option>
-        </select>
+            <label for="permissions_type">İzin Türü</label>
+            <select name="permissions_type" required>
+                <option value="">-- Seçin --</option>
+                <option value="Weekend">Hafta Sonu</option>
+                <option value="Holiday">Tatil</option>
+                <option value="Medical">Sağlık</option>
+                <option value="Family">Aile</option>
+                <option value="Another">Diğer</option>
+            </select>
 
-        <button type="submit">Kaydet</button>
-    </form>
+            <button type="submit">Kaydet</button>
+        </form>
 
-    <!-- Son 5 izin -->
-    <h3>Son 5 İzin</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Öğrenci</th>
-                <th>Başlangıç</th>
-                <th>Bitiş</th>
-                <th>Tür</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($recentPending as $perm): ?>
-            <tr>
-                <td><?= $perm['permission_id'] ?></td>
-                <td><?= htmlspecialchars($perm['student_name']) ?></td>
-                <td><?= htmlspecialchars($perm['start_date']) ?></td>
-                <td><?= htmlspecialchars($perm['end_date']) ?></td>
-                <td><?= htmlspecialchars($perm['permissions_type']) ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+        <!-- Son 5 izin -->
+        <h3>Son 5 İzin</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Öğrenci</th>
+                    <th>Başlangıç</th>
+                    <th>Bitiş</th>
+                    <th>Tür</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($recentPending as $perm): ?>
+                    <tr>
+                        <td><?= $perm['permission_id'] ?></td>
+                        <td><?= htmlspecialchars($perm['student_name']) ?></td>
+                        <td><?= htmlspecialchars($perm['start_date']) ?></td>
+                        <td><?= htmlspecialchars($perm['end_date']) ?></td>
+                        <td><?= htmlspecialchars($perm['permissions_type']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </body>
+
 </html>

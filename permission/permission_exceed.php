@@ -4,47 +4,47 @@ require_once "../config/db.php";
 
 // Yetki kontrolü
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
-    header("Location: ../public/login.php");
-    exit;
+  header("Location: ../public/login.php");
+  exit;
 }
 
 // Silme işlemi
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_student_id'])) {
-    $deleteId = (int)$_POST['delete_student_id'];
+  $deleteId = (int)$_POST['delete_student_id'];
 
-    // Onaylanmış izinlerin toplam gün sayısı
-    $stmt = $pdo->prepare("
+  // Onaylanmış izinlerin toplam gün sayısı
+  $stmt = $pdo->prepare("
         SELECT SUM(DATEDIFF(p.end_date, p.start_date) + 1) AS total_days
         FROM students s
         JOIN permissions p ON s.student_id = p.student_id
         JOIN permission_approved_by a ON a.permission_id = p.permission_id
         WHERE s.student_id = ?
     ");
-    $stmt->execute([$deleteId]);
-    $totalDays = (int)$stmt->fetchColumn();
+  $stmt->execute([$deleteId]);
+  $totalDays = (int)$stmt->fetchColumn();
 
-    if ($totalDays > 45) {
-        $pdo->prepare("DELETE FROM permission_approved_by WHERE permission_id IN 
+  if ($totalDays > 45) {
+    $pdo->prepare("DELETE FROM permission_approved_by WHERE permission_id IN 
             (SELECT permission_id FROM permissions WHERE student_id = ?)")->execute([$deleteId]);
-        $pdo->prepare("DELETE FROM permission_created_by WHERE permission_id IN 
+    $pdo->prepare("DELETE FROM permission_created_by WHERE permission_id IN 
             (SELECT permission_id FROM permissions WHERE student_id = ?)")->execute([$deleteId]);
-        $pdo->prepare("DELETE FROM permissions WHERE student_id = ?")->execute([$deleteId]);
-        $pdo->prepare("DELETE FROM students WHERE student_id = ?")->execute([$deleteId]);
-        $_SESSION['success_message'] = "45 günü geçen öğrenci, tüm kayıtlarıyla birlikte silindi.";
-    } else {
-        if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
-            $pdo->prepare("DELETE FROM permission_approved_by WHERE permission_id IN 
+    $pdo->prepare("DELETE FROM permissions WHERE student_id = ?")->execute([$deleteId]);
+    $pdo->prepare("DELETE FROM students WHERE student_id = ?")->execute([$deleteId]);
+    $_SESSION['success_message'] = "45 günü geçen öğrenci, tüm kayıtlarıyla birlikte silindi.";
+  } else {
+    if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
+      $pdo->prepare("DELETE FROM permission_approved_by WHERE permission_id IN 
                 (SELECT permission_id FROM permissions WHERE student_id = ?)")->execute([$deleteId]);
-            $pdo->prepare("DELETE FROM permission_created_by WHERE permission_id IN 
+      $pdo->prepare("DELETE FROM permission_created_by WHERE permission_id IN 
                 (SELECT permission_id FROM permissions WHERE student_id = ?)")->execute([$deleteId]);
-            $pdo->prepare("DELETE FROM permissions WHERE student_id = ?")->execute([$deleteId]);
-            $pdo->prepare("DELETE FROM students WHERE student_id = ?")->execute([$deleteId]);
-            $_SESSION['success_message'] = "Öğrenci başarıyla silindi.";
-        }
+      $pdo->prepare("DELETE FROM permissions WHERE student_id = ?")->execute([$deleteId]);
+      $pdo->prepare("DELETE FROM students WHERE student_id = ?")->execute([$deleteId]);
+      $_SESSION['success_message'] = "Öğrenci başarıyla silindi.";
     }
+  }
 
-    header("Location: permission_exceed.php");
-    exit;
+  header("Location: permission_exceed.php");
+  exit;
 }
 
 // Öğrencileri ve onaylı izin günlerini çek
@@ -61,16 +61,18 @@ $students = $pdo->query("
 ?>
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
   <meta charset="UTF-8">
   <title>İzin Takip</title>
   <link rel="stylesheet" href="../assets/css/sidebar.css">
   <style>
     body {
-      margin:0; padding:0;
-      font-family:'Segoe UI',sans-serif;
-      background:#e6f0ff;
-      display:flex;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #e6f0ff;
+      display: flex;
     }
 
     .main {
@@ -92,7 +94,7 @@ $students = $pdo->query("
       background: white;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
 
     .table-container table {
@@ -170,16 +172,19 @@ $students = $pdo->query("
     }
   </script>
 </head>
+
 <body>
   <?php include "../includes/sidebar.php"; ?>
   <div class="main">
     <?php if (!empty($_SESSION['error_message'])): ?>
       <div style="background:#ffe5e5;color:#a00;padding:10px;border-left:4px solid #e63946;margin-bottom:20px;">
-        <?= $_SESSION['error_message']; unset($_SESSION['error_message']); ?>
+        <?= $_SESSION['error_message'];
+        unset($_SESSION['error_message']); ?>
       </div>
     <?php elseif (!empty($_SESSION['success_message'])): ?>
       <div style="background:#e5ffea;color:#060;padding:10px;border-left:4px solid #2a9d8f;margin-bottom:20px;">
-        <?= $_SESSION['success_message']; unset($_SESSION['success_message']); ?>
+        <?= $_SESSION['success_message'];
+        unset($_SESSION['success_message']); ?>
       </div>
     <?php endif; ?>
 
@@ -197,26 +202,27 @@ $students = $pdo->query("
         </thead>
         <tbody>
           <?php foreach ($students as $student): ?>
-          <tr>
-            <td><?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?></td>
-            <td><?= htmlspecialchars($student['TC_no']) ?></td>
-            <td>
-              <span class="badge <?= $student['total_days'] > 45 ? 'badge-high' : 'badge-low' ?>">
-                <?= $student['total_days'] ?> gün
-              </span>
-            </td>
-            <td>
-              <form id="form-<?= $student['student_id'] ?>" method="post"
-                    onsubmit="return confirmDeletion(<?= $student['student_id'] ?>, <?= $student['total_days'] ?>)">
-                <input type="hidden" name="delete_student_id" value="<?= $student['student_id'] ?>">
-                <button type="submit" class="btn-black">İlişik Kes</button>
-              </form>
-            </td>
-          </tr>
+            <tr>
+              <td><?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?></td>
+              <td><?= htmlspecialchars($student['TC_no']) ?></td>
+              <td>
+                <span class="badge <?= $student['total_days'] > 45 ? 'badge-high' : 'badge-low' ?>">
+                  <?= $student['total_days'] ?> gün
+                </span>
+              </td>
+              <td>
+                <form id="form-<?= $student['student_id'] ?>" method="post"
+                  onsubmit="return confirmDeletion(<?= $student['student_id'] ?>, <?= $student['total_days'] ?>)">
+                  <input type="hidden" name="delete_student_id" value="<?= $student['student_id'] ?>">
+                  <button type="submit" class="btn-black">İlişik Kes</button>
+                </form>
+              </td>
+            </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
     </div>
   </div>
 </body>
+
 </html>

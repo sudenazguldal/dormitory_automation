@@ -1,5 +1,5 @@
 <?php
-// enter_leave/enter.php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action'], $_POST['stu
     $student_id = $_POST['student_id'];
     $action = $_POST['action'];
 
-    // Son işlem kontrolü (aynı işlem tekrar yapılmasın)
+    // Son işlem kontrolü 
     $stmt = $pdo->prepare("SELECT action FROM student_entry_logs WHERE student_id = ? ORDER BY timestamp DESC LIMIT 1");
     $stmt->execute([$student_id]);
     $lastAction = $stmt->fetchColumn();
@@ -47,12 +47,14 @@ $students = $pdo->query("SELECT s.student_id, s.TC_no, s.first_name, s.last_name
 ?>
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <title>Giriş / Çıkış Kontrol</title>
     <link rel="stylesheet" href="../assets/css/sidebar.css">
     <style>
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
         }
@@ -94,17 +96,18 @@ $students = $pdo->query("SELECT s.student_id, s.TC_no, s.first_name, s.last_name
             width: 100%;
             border-collapse: collapse;
             background-color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px 16px;
             text-align: left;
             border-bottom: 1px solid #ccc;
         }
 
         th {
-            
+
             background-color: #123060;
             color: white;
         }
@@ -122,8 +125,15 @@ $students = $pdo->query("SELECT s.student_id, s.TC_no, s.first_name, s.last_name
             font-weight: bold;
         }
 
-        .enter { background-color: #3794ff; color: white; }
-        .leave { background-color: #345678; color: white; }
+        .enter {
+            background-color: #3794ff;
+            color: white;
+        }
+
+        .leave {
+            background-color: #345678;
+            color: white;
+        }
 
         .message {
             text-align: center;
@@ -144,50 +154,51 @@ $students = $pdo->query("SELECT s.student_id, s.TC_no, s.first_name, s.last_name
         }
     </script>
 </head>
-<body>
-<?php include "../includes/sidebar.php"; ?>
-<div class="main">
-    <h2>Öğrenci Giriş / Çıkış Takibi</h2>
-    <?php if (isset($message)) echo "<p class='message'>$message</p>"; ?>
-    <div class="search-box">
-        <input type="text" id="searchInput" onkeyup="searchStudents()" placeholder="Öğrenci adı veya TC ile ara...">
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>TC Kimlik No</th>
-                <th>Ad Soyad</th>
-                <th>Son İşlem</th>
-                <th>İşlem</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($students as $student): ?>
-                <tr>
-                    <td><?= htmlspecialchars($student['TC_no']) ?></td>
-                    <td><?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?></td>
-                    <td>
-                        <?php
-                        if ($student['last_action']) {
-                            echo ($student['last_action'] === 'enter' ? 'Giriş' : ($student['last_action'] === 'leave' ? 'Çıkış' : ''));
-                            echo ' (' . date("d.m.Y H:i", strtotime($student['last_time'])) . ')';
-                        } else {
-                            echo '-';
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <form method="post">
-                            <input type="hidden" name="student_id" value="<?= $student['student_id'] ?>">
-                            <button type="submit" name="action" value="enter" class="btn enter">Giriş</button>
-                            <button type="submit" name="action" value="leave" class="btn leave">Çıkış</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-</body>
-</html>
 
+<body>
+    <?php include "../includes/sidebar.php"; ?>
+    <div class="main">
+        <h2>Öğrenci Giriş / Çıkış Takibi</h2>
+        <?php if (isset($message)) echo "<p class='message'>$message</p>"; ?>
+        <div class="search-box">
+            <input type="text" id="searchInput" onkeyup="searchStudents()" placeholder="Öğrenci adı veya TC ile ara...">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>TC Kimlik No</th>
+                    <th>Ad Soyad</th>
+                    <th>Son İşlem</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($students as $student): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($student['TC_no']) ?></td>
+                        <td><?= htmlspecialchars($student['first_name'] . ' ' . $student['last_name']) ?></td>
+                        <td>
+                            <?php
+                            if ($student['last_action']) {
+                                echo ($student['last_action'] === 'enter' ? 'Giriş' : ($student['last_action'] === 'leave' ? 'Çıkış' : ''));
+                                echo ' (' . date("d.m.Y H:i", strtotime($student['last_time'])) . ')';
+                            } else {
+                                echo '-';
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <form method="post">
+                                <input type="hidden" name="student_id" value="<?= $student['student_id'] ?>">
+                                <button type="submit" name="action" value="enter" class="btn enter">Giriş</button>
+                                <button type="submit" name="action" value="leave" class="btn leave">Çıkış</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

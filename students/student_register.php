@@ -1,9 +1,8 @@
 <?php
 session_start();
-// Bu satırı ekleyin veya değiştirin:
+
 require_once __DIR__ . '/../config/db.php';
-// artık $pdo hazır
-// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
+
 
 
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
@@ -28,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <title>Öğrenci Kaydı</title>
@@ -99,30 +99,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     </style>
 </head>
+
 <body>
-<?php include "../includes/sidebar.php"; ?>
-<div class="main">
-    <form method="post">
-        <h2>Öğrenci Kaydı</h2>
-        <?php if (!empty($message)) echo "<p class='message'>$message</p>"; ?>
+    <?php include "../includes/sidebar.php"; ?>
+    <div class="main">
+        <form method="post">
+            <h2>Öğrenci Kaydı</h2>
+            <?php if (!empty($message)) echo "<p class='message'>$message</p>"; ?>
 
-        <label for="tc_no">TC Kimlik No:</label>
-        <input type="text" name="tc_no" maxlength="11" required>
+            <label for="tc_no">TC Kimlik No:</label>
+            <input type="text" name="tc_no" maxlength="11" required>
 
-        <label for="first_name">Ad:</label>
-        <input type="text" name="first_name" required>
+            <label for="first_name">Ad:</label>
+            <input type="text" name="first_name" required>
 
-        <label for="last_name">Soyad:</label>
-        <input type="text" name="last_name" required>
+            <label for="last_name">Soyad:</label>
+            <input type="text" name="last_name" required>
 
-        <label for="birth_date">Doğum Tarihi:</label>
-        <input type="date" name="birth_date" required>
+            <label for="birth_date">Doğum Tarihi:</label>
+            <input type="date" name="birth_date" required>
 
-        <label for="tel_no">Telefon Numarası:</label>
-        <input type="text" name="tel_no" required>
+            <label for="tel_no">Telefon Numarası:</label>
+            <input type="text" name="tel_no" required>
 
-        <button type="submit">Kaydet</button>
-    </form>
-</div>
+            <button type="submit">Kaydet</button>
+        </form>
+    </div>
 </body>
+
 </html>

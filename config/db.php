@@ -1,10 +1,10 @@
 <?php
-// config/db.php
+
 $host     = '127.0.0.1';
-$port     = 3307;               // XAMPP’in MySQL portu
-$dbname   = 'dormitory_database'; // Veritabanı adı
+$port     = 3307;              
+$dbname   = 'dormitory_database';
 $username = 'root';
-$password = '';                 // phpMyAdmin şifresizse boş bırakın
+$password = '';                 
 
 try {
     // DSN string’i
@@ -14,7 +14,7 @@ try {
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
-    // Bağlantı başarılıysa sessize alın
+    // Bağlantı başarılıysa sessize al
     // echo "✅ Bağlantı başarılı!";
 } catch (PDOException $e) {
     // Hata varsa öldürür ve mesajı gösterir
