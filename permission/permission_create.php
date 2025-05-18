@@ -1,5 +1,5 @@
 <?php
-// permission/permission_create.php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $type = $_POST['permissions_type'];
 
      try {
-        // 1) permissions tablosuna ekle (trigger burada çalışacak)
+        //  permissions tablosuna ekleme
         $stmt = $pdo->prepare("
             INSERT INTO permissions 
               (student_id, start_date, end_date, permissions_type) 
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->execute([$student_id, $start_date, $end_date, $type]);
         $permission_id = $pdo->lastInsertId();
 
-        // 2) permission_created_by ekleme (istersen trigger’a bırakabilirsin)
+        
         $stmt2 = $pdo->prepare("
             INSERT INTO permission_created_by 
               (permission_id, user_id) 
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message = "İzin başarıyla eklendi.";
     } catch (PDOException $e) {
-        // trigger’dan gelen hata mesajını al
+        // trigger’dan gelen hata mesajını alma
         $msg = isset($e->errorInfo[2]) 
              ? $e->errorInfo[2] 
              : "Beklenmedik bir hata oluştu.";
@@ -65,7 +65,7 @@ $students = $pdo->query("SELECT student_id, first_name, last_name FROM students 
 <head>
   <meta charset="UTF-8">
   <title>Beklemedeki Faturalar</title>
-  <!-- Sidebar & site genel stilleri -->
+
   <link rel="stylesheet" href="../assets/css/sidebar.css">
   <style>
         body {
