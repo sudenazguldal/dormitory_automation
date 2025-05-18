@@ -89,19 +89,26 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 3. **Yapılandırma Dosyasını Güncelleyin**  
    - `config/db.php` içindeki şu satırları kendi ayarlarınıza göre düzenleyin:
      ```php
-     $host = 'localhost';  
-     $dbname = 'dormitory_database';
-     $user = 'root';
-     $pass = '';
+     $host = '127.0.0.1';
+     $port= 3307;                     // XAMPP’in MySQL portu  
+     $dbname = 'dormitory_database';  // Veritabanı adı
+     $user = 'root';                  // kullanıcı adı
+     $pass = '';                      // Şifre XAMPP için genelde boş olur 
      ```
-   - Eğer MySQL port’unuz farklıysa `3307` gibi port numarasını da ekleyin:
+   - Eğer MySQL port’unuz farklıysa `3306` gibi veya phpMyAdminde XAMPP değilde workbench kullanıyorsanız:
      ```php
-     $dsn = "mysql:host=$host;port=3307;dbname=$dbname;charset=utf8";
+     $host = 'localhost';
+     $port= 3306;                     // MySQL’in portu  
+     $dbname = 'dormitory_database';  // Veritabanı adı
+     $user = 'root';                  // Kullanıcı adı
+     $pass = '';                      // MySQL şifreniz
      ```
-
+       
+   
 4. **Projeyi Çalıştırın**  
    - Tüm dosyalar XAMPP’in `htdocs/dormitory_automation/` klasörüne kopyalanmış olmalı.  
-   - Tarayıcınızda `http://localhost/dormitory_automation/` adresine gidin.
+   -  Tarayıcıda `http://localhost/dormitory_automation/public/login.php` adresine gidin.
+   -  Her şey doğruysa uygulama giriş ekranını ve panelleri göreceksiniz!
 
 5. **Varsayılan Kullanıcılar**  
    - **Güvenlik** rolüyle:  
@@ -110,23 +117,18 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
      - TC: `12345678932`, şifre: `29sude`  
 
 
-6. **Uygulamayı açın**:
-
-   * Tarayıcıda `http://localhost/dormitory_automation/public/login.php` adresine gidin.
-   * Her şey doğruysa uygulama giriş ekranını ve panelleri göreceksiniz!
-
-
-
 
 ## Proje Yapısı
 
 ```
-├── public/                # Giriş ve dashboard sayfaları
+├── assets/                # Görseller, stiller  
 ├── config/                # Veritabanı bağlantı ayarları
 │   └── db.php             # PDO ile bağlantı yapılandırması
-├── permissions/           # İzin talepleri modülleri
-├── payments/              # Fatura ve ödeme modülleri
-├── students/              # Öğrenci kayıt ve yatak atama modülleri
-├── security/              # Güvenlik kullanıcı sayfaları
-└── assets/                # Görseller, stiller
+├── enter_leave/           # Giriş/çıkış sayfası
+├── includes/              # Sidebar navigasyon modülü
+├── payments/              # Fatura ve ödemelerle ilişkili modülleri
+├── permissions/           # İzinlerle ilişkili modülleri
+├── public/                # Giriş ve dashboard sayfaları
+└── students/              # Öğrenci kayıt, listeleme ve yatak atama modülleri
+
 ```
