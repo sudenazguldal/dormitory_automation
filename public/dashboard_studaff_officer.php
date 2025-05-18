@@ -65,8 +65,8 @@ $name = $_SESSION["name"] ?? "Personel";
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                height: auto; /* İçeriğe göre ayarlanır */
-                width: 100%; /* Tam ekran genişliği */
+                height: auto; /* içeriğe göre ayarlanır */
+                width: 100%; /* tam ekran genişliği */
                 
             }
             .welcome-box {
