@@ -1,1 +1,103 @@
-# dormitory_automation
+# dormitory_automation 
+# Yurt Otomasyon Sistemi
+
+Öğrenci yurdu işlemlerini yönetmek için web tabanlı uygulama, Güvenlik ve Öğrenci İşleri personeli için ayrı arayüzler sunar. Özellikler arasında giriş/çıkış takibi, izin talepleri, fatura ve ödeme yönetimi ile gerçek zamanlı panolar bulunmaktadır.
+
+## Özellikler
+
+* **Kimlik Doğrulama & Yetkilendirme**: `security` ve `students_affair` rollerine özel güvenli giriş.
+* **Giriş/Çıkış Takibi**: Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.
+* **İzin Yönetimi**: Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylayıp reddedebilir.
+* **Fatura & Ödeme Modülü**: Yeni kayıtlarda otomatik fatura oluşturma; tam ödeme sonrası fatura durumu güncellenir.
+* **Gerçek Zamanlı Panolar**:
+
+  * Son 5 işlem listesi
+  * Bekleyen izin talepleri görünümü
+  * Ödeme özetleri ve uyarılar
+* **Otomatik Tetikleyiciler**: Fatura ID’si doldurma, oluşturma/onaylama işlemlerini loglama ve durum güncellemeleri için MySQL trigger’ları.
+
+## Teknolojiler
+
+* **Backend**: PHP (PDO)
+* **Veritabanı**: MySQL 8.0
+* **Frontend**: HTML5, CSS3, JavaScript
+* **Yerel Sunucu**: XAMPP (Apache + MySQL)
+* **Versiyon Kontrol**: Git & GitHub
+
+## Gereksinimler
+
+* PHP 7.4 veya üzeri
+* MySQL 8.0
+* XAMPP (ya da benzer LAMP/WAMP)
+* Git
+
+## Kurulum
+
+1. **Depoyu kopyalayın**:
+
+   ```bash
+   git clone https://github.com/<kullanici-adi>/dormitory_automation.git
+   cd dormitory_automation
+   ```
+2. **Veritabanı yapılandırması**:
+
+   * `dormitory_database` adında bir veritabanı oluşturun:
+
+     ```bash
+     mysql -u root -p -e "CREATE DATABASE dormitory_database;"
+     ```
+   * **Şema (yapı) yüklemesi**:
+
+     ```bash
+     # Sadece tablo yapıları, foreign key, trigger ve index tanımlamaları içerir
+     mysql -u root -p dormitory_database < schema.sql
+     ```
+   * **Başlangıç verileri yüklemesi (isteğe bağlı)**:
+
+     ```bash
+     # INSERT komutlarıyla kullanıcı, öğrenci ve diğer seed verilerini ekler
+     mysql -u root -p dormitory_database < data.sql
+     ```
+3. **Bağlantı ayarları** `config/db.php` dosyasında güncelleyin:
+
+   ```php
+   <?php
+   define('DB_HOST', '127.0.0.1');
+   define('DB_PORT', '3306');
+   define('DB_NAME', 'dormitory_database');
+   define('DB_USER', 'root');
+   define('DB_PASS', '');
+   ```
+4. **Sunucuyu başlatın**:
+
+   * XAMPP üzerinden Apache ve MySQL servislerini çalıştırın.
+5. **Uygulamayı açın**:
+
+   * Tarayıcıda `http://localhost/dormitory_automation/public/login.php` adresine gidin.
+
+## Kullanım
+
+* **Güvenlik Personeli**:
+
+  * Giriş/çıkış işlemleri ekleyip silebilir.
+  * İzin taleplerini görüntüleyip filtreleyebilir.
+* **Öğrenci İşleri Personeli**:
+
+  * İzin taleplerini onaylayıp reddedebilir.
+  * Yeni öğrenci kaydı ve oda/yatak ataması yapabilir.
+  * Fatura oluşturma ve ödeme takibi gerçekleştirebilir.
+
+## Proje Yapısı
+
+```
+├── public/                # Giriş ve dashboard sayfaları
+├── config/                # Veritabanı bağlantı ayarları
+│   └── db.php             # PDO ile bağlantı yapılandırması
+├── schema.sql             # Veritabanı şeması (CREATE TABLE, INDEX, TRIGGER tanımları)
+├── data.sql               # Başlangıç verileri (INSERT komutları)
+├── permissions/           # İzin talepleri modülleri
+├── payments/              # Fatura ve ödeme modülleri
+├── students/              # Öğrenci kayıt ve yatak atama modülleri
+├── security/              # Güvenlik kullanıcı sayfaları
+└── assets/                # Görseller, stiller, JavaScript dosyaları
+```
