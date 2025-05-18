@@ -3,7 +3,7 @@
 
 Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçlerini web tabanlı olarak yöneten PHP/MySQL tabanlı bir uygulamadır.
 
-## Özellikler
+## Özellikler           
 
 * ### **Kimlik Doğrulama & Yetkilendirme**
   ![`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/security.png)
@@ -14,14 +14,14 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 	
    
 
-* ### **Giriş/Çıkış Takibi**
+* ### **Giriş/Çıkış Takibi**           
   ![Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.](assets/images/enter_leave.png)
   
   *  -Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.
 
 
 
-* ### **İzin Yönetimi**: 
+* ### **İzin Yönetimi**:            
   ![pers](assets/images/permission.png)
   ![pers](assets/images/perm_follw.png)
   ![pers](assets/images/total_perm.png)
@@ -29,7 +29,7 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
   * -Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylayabilir veya silebilir. 45 günden fazla izin kullanmış öğrenciler takip edilir.
 
 
-* ### **Fatura & Ödeme Modülü**: 
+* ### **Fatura & Ödeme Modülü**:     
   ![pay](assets/images/act_pay.png)
   ![pay](assets/images/pay.png)
   ![pay](assets/images/pay_follw.png)
