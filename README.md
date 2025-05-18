@@ -5,7 +5,7 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 
 ## Özellikler           
 
-* ### **Kimlik Doğrulama & Yetkilendirme**
+*  ### **Kimlik Doğrulama & Yetkilendirme**
   ![`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/security.png)
   ![`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/studaff_officer.png)
   
