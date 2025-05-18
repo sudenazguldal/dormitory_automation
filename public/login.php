@@ -1,15 +1,13 @@
 <?php
 
 
-// 1) Eğer henüz .installed yoksa kurulum yap
-if (! file_exists(__DIR__ . '/../.installed')) {
-    require __DIR__ . '/../install.php';
-    exit;  // kurulum bittiğinde sayfa yeniden yüklenebilir
-}
 
-// 2) Veritabanı şimdi var; PDO bağlan
-require_once __DIR__ . '/../config/db.php';
 session_start();
+// Bu satırı ekleyin veya değiştirin:
+require_once __DIR__ . '/../config/db.php';
+// artık $pdo hazır
+// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
+
 
 
 
@@ -76,10 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             width: 100%;
             max-width: 400px;
-             position: absolute;   
-            top: 50%;                           /* düşeyde ortalar */
-            transform: translateY(-50%);        /* düşey hizalamayı tam ortalamak için gerekli */
-            left: 750px;                        /* yatay konumu istediğin gibi ayarla */
+             position: absolute;  
+            top: 50%;            /* düşeyde ortalar */
+            transform: translateY(-50%); /* düşey hizalamayı tam ortalamak için gerekli */
+            left: 750px;         /* yatay konumu istediğin gibi ayarla */
 
         }
 
