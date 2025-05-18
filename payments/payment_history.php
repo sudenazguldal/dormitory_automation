@@ -8,7 +8,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
     exit;
 }
 
-// VIEW’dan veriyi çek
+// VIEW’dan veriyi çekme
 $stmt    = $pdo->query("SELECT * FROM v_monthly_payments");
 $summary = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
