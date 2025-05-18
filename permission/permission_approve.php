@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // Düzenle
+    
     if (isset($_POST['edit_id'], $_POST['edit_start'], $_POST['edit_end'], $_POST['edit_type'])) {
         $edit_start = trim($_POST['edit_start']);
         $edit_end   = trim($_POST['edit_end']);

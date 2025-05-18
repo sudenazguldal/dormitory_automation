@@ -22,7 +22,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <title>Beklemedeki Faturalar</title>
-  <!-- Sidebar & site genel stilleri -->
+  <
   <link rel="stylesheet" href="../assets/css/sidebar.css">
   <style>
     html,
@@ -76,6 +76,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
+
     main table {
       width: 80%;
       /* Ana alanın %80 genişliğini kaplar */
@@ -107,6 +108,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       color: white;
       /* Başlık metni beyaz */
     }
+
 
 
 

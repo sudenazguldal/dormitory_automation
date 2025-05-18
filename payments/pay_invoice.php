@@ -88,6 +88,7 @@ $methods = $pdo->query("SELECT method_id, method_name FROM payment_method")
 
 
 
+
     main {
       flex: 1;
       /* Body içindeki yan yana duran sidebar + main’da main, kalan tüm alanı kaplasın */
@@ -104,6 +105,7 @@ $methods = $pdo->query("SELECT method_id, method_name FROM payment_method")
 
 
 
+
     main h2 {
       color: #0a2342;
       /* Başlık metni koyu laciverte yakın */
@@ -112,6 +114,7 @@ $methods = $pdo->query("SELECT method_id, method_name FROM payment_method")
       margin-bottom: 20px;
       /* Altında 20px boşluk bırakır */
     }
+
 
 
 
@@ -147,6 +150,7 @@ $methods = $pdo->query("SELECT method_id, method_name FROM payment_method")
       color: white;
       /* Başlık metni beyaz */
     }
+
 
 
 

@@ -2,13 +2,13 @@
 session_start();
 require_once "../config/db.php";
 
-// Yetki kontrolü
+// Yetki kontrolü yapma
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
   header("Location: ../public/login.php");
   exit;
 }
 
-// Silme işlemi
+// Silme işlemi 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_student_id'])) {
   $deleteId = (int)$_POST['delete_student_id'];
 
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_student_id']))
   exit;
 }
 
-// Öğrencileri ve onaylı izin günlerini çek
+// Öğrencileri ve onaylı izin günlerini çekme
 $students = $pdo->query("
     SELECT s.student_id, s.TC_no, s.first_name, s.last_name,
            COALESCE(SUM(DATEDIFF(p.end_date, p.start_date)+1), 0) AS total_days
