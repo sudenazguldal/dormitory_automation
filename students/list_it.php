@@ -1,5 +1,5 @@
 <?php
-// students/list_it.php
+
 session_start();
 require_once __DIR__ . '/../config/db.php';
 
