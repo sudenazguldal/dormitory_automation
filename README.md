@@ -20,7 +20,8 @@
 
 * **Backend**: PHP (PDO)
 * **Veritabanı**: MySQL 8.0
-* **Frontend**: HTML5, CSS3, JavaScript
+* **Frontend**: HTML, CSS,
+* **IDE**: Visual Studio Code
 * **Yerel Sunucu**: XAMPP (Apache + MySQL)
 * **Versiyon Kontrol**: Git & GitHub
 
