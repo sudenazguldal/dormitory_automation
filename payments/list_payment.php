@@ -8,7 +8,7 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
     exit;
 }
 
-// 4. Aktif (beklemedeki) faturaları view’dan çek
+// Aktif (beklemedeki) faturaları view’dan çek
 $sql    = "SELECT * FROM v_active_invoices";
 $stmt   = $pdo->query($sql);
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
