@@ -1,9 +1,8 @@
 <?php
 session_start();
-// Bu satırı ekleyin veya değiştirin:
+
 require_once __DIR__ . '/../config/db.php';
-// artık $pdo hazır
-// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
+
 
 
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "students affair") {
