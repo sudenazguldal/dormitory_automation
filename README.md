@@ -5,21 +5,55 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 
 ## Özellikler
 
- * ### **Kimlik Doğrulama & Yetkilendirme**
- 
-![`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/security.png)
-![`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/studaff_officer.png)
--`security` ve `students_affair` rollerine özel güvenli giriş.
+* ### **Kimlik Doğrulama & Yetkilendirme**
+  ![`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/security.png)
+  ![`security` ve `students_affair` rollerine özel güvenli giriş.](assets/images/studaff_officer.png)
+  
+  *  -`security` ve `students_affair` rollerine özel güvenli giriş.
 
-* ### **Giriş/Çıkış Takibi**: Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.
-![Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.](assets/images/enter_leave.png)
-* -Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.
-* 
-* **İzin Yönetimi**: Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylanabilir veya silinebilir. 45 günden fazla izin kullanmış öğrenciler takip edilir.
-* **Fatura & Ödeme Modülü**: Öğrencilerin yurt ödemeleri takip edilir; aylık olarak fatura oluşturulur; yeni kayıtlarda o ayın faturası otomatik olarak fatura oluşturma.
-* **Öğrenci ekleme**: Yeni öğrenci kaydı yapılır.
-* **Öğrenci listeleme**:kayıtlı olan öğrencilerin
+	
+   
+
+* ### **Giriş/Çıkış Takibi**
+  ![Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.](assets/images/enter_leave.png)
+  
+  *  -Çift giriş/çıkış önlenir; her işlem zaman damgasıyla kaydedilir.
+
+
+
+* ### **İzin Yönetimi**: 
+  ![pers](assets/images/permission.png)
+  ![pers](assets/images/perm_follw.png)
+  ![pers](assets/images/total_perm.png)
+  
+  * -Öğrenciler izin talep edebilir; personel bekleyen talepleri onaylanabilir veya silinebilir. 45 günden fazla izin kullanmış öğrenciler takip edilir.
+
+
+* ### **Fatura & Ödeme Modülü**: 
+  ![pay](assets/images/act_pay.png)
+  ![pay](assets/images/pay.png)
+  ![pay](assets/images/pay_follw.png)
+  
+  * -Öğrencilerin yurt ödemeleri takip edilir; aylık olarak fatura oluşturulur; yeni kayıtlarda o ayın faturası otomatik olarak fatura oluşturma.
+
+
+
+* ### **Öğrenci ekleme**:
+  ![add](assets/images/add_stud.png)
+  
+  *  -Yeni öğrenci kaydı yapılır.
+ 
+* ### **Öğrenci listeleme**:
+  ![add](assets/images/list_stud.png)
+  
+  *  -Kayıtlı olan öğrencilerin bilgileri görüntülenir.
+
 * **Öğrenci oda takibi**: Öğrenci yeni eklendiğinde oda ve yatak nosu atanır; isteğe göre oda değişikliği yapılır.
+
+* * ### **Öğrenci oda takibi**:
+  ![add](assets/images/add_stud.png)
+  
+  *  -Öğrenci yeni eklendiğinde oda ve yatak nosu atanır; isteğe göre oda değişikliği yapılır.
 
 
 ## Teknolojiler
