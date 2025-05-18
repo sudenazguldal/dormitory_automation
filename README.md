@@ -99,5 +99,5 @@
 ├── payments/              # Fatura ve ödeme modülleri
 ├── students/              # Öğrenci kayıt ve yatak atama modülleri
 ├── security/              # Güvenlik kullanıcı sayfaları
-└── assets/                # Görseller, stiller, JavaScript dosyaları
+└── assets/                # Görseller, stiller
 ```
