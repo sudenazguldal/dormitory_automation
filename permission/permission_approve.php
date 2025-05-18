@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $ins->execute([$_POST['approve_id'], $_SESSION['user_id']]);
     $_SESSION['success_message'] = "İzin başarıyla onaylandı.";
   } catch (PDOException $e) {
-    // trigger’dan gelen özel mesajı al (ör. "Başlangıç tarihi bugünden önce olamaz…")
+    // trigger’dan gelen mesajı alma
     $msg = isset($e->errorInfo[2]) ? $e->errorInfo[2] : $e->getMessage();
     $_SESSION['error_message'] = $msg;
 }
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   exit;
 }
 
-    // Düzenle
+    
     if (isset($_POST['edit_id'], $_POST['edit_start'], $_POST['edit_end'], $_POST['edit_type'])) {
         $edit_start = trim($_POST['edit_start']);
         $edit_end   = trim($_POST['edit_end']);
@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 ]);
                 $_SESSION['success_message'] = "İzin başarıyla güncellendi.";
             } catch (PDOException $e) {
-        // trigger’dan gelen özel mesajı al (ör. "Başlangıç tarihi bugünden önce olamaz…")
+        // trigger’dan gelen mesajı alma
          $msg = isset($e->errorInfo[2]) ? $e->errorInfo[2] : $e->getMessage();
          $_SESSION['error_message'] = $msg;
 }
@@ -93,18 +93,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 }
-} // <-- Add this closing brace to properly end the main if ($_SERVER["REQUEST_METHOD"] === "POST") block
+} 
 
-// ——— Burada artık VIEW’ları kullanıyoruz ———
 
-// 1) Bekleyen izinler (VIEW: view_pending_permissions)
+
+// Bekleyen izinler (VIEW: view_pending_permissions)
 $permissions = $pdo
     ->query("SELECT permission_id, student_name, start_date, end_date, permissions_type
              FROM view_pending_permissions
              ORDER BY start_date ASC")
     ->fetchAll();
 
-// 2) Onaylı son 5 izin (VIEW: view_recent_approvals)
+// Onaylı son 5 izin (VIEW: view_recent_approvals)
 $approved = $pdo
     ->query("SELECT permission_id, student_name, start_date, end_date, permissions_type
              FROM view_recent_approvals")
