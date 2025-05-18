@@ -1,5 +1,5 @@
 <?php
-// enter_leave/enter.php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action'], $_POST['stu
     $student_id = $_POST['student_id'];
     $action = $_POST['action'];
 
-    // Son işlem kontrolü (aynı işlem tekrar yapılmasın)
+    // Son işlem kontrolü (aynı işlem tekrar yapılmasın diye)
     $stmt = $pdo->prepare("SELECT action FROM student_entry_logs WHERE student_id = ? ORDER BY timestamp DESC LIMIT 1");
     $stmt->execute([$student_id]);
     $lastAction = $stmt->fetchColumn();
