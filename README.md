@@ -112,6 +112,7 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 4. **Sunucuyu başlatın**:
 
    * XAMPP üzerinden Apache ve MySQL servislerini çalıştırın.
+    (projenin XAMPP/Htdocs klasörünün altında olduğuna emin olun)
 5. **Uygulamayı açın**:
 
    * Tarayıcıda `http://localhost/dormitory_automation/public/login.php` adresine gidin.
