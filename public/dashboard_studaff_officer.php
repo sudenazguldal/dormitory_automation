@@ -40,8 +40,7 @@ $name = $_SESSION["name"] ?? "Personel";
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh; /* Tam ekran yüksekliği */
-    width: 170vh; /* Tam ekran genişliği */
+    
     background: url('../assets/images/water_w.jpg') no-repeat center right fixed;
  
     background-size: cover;
