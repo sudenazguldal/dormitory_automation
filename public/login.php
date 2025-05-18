@@ -3,10 +3,9 @@
 
 
 session_start();
-// Bu satırı ekleyin veya değiştirin:
+
 require_once __DIR__ . '/../config/db.php';
-// artık $pdo hazır
-// Debug: hangi ayarlarla bağlanmaya çalışıyoruz?
+
 
 
 
@@ -48,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
-<!-- Giriş Formu (HTML) -->
+<!-- Giriş Formu  -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
