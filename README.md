@@ -74,60 +74,49 @@ Ocean Breeze, bir öğrenci yurdunun giriş-çıkış, izin ve ödeme süreçler
 
 ## Kurulum
 
-1. **Depoyu kopyalayın**:
+## Kurulum
 
-   ```bash
-   git clone https://github.com/<kullanici-adi>/dormitory_automation.git
-   cd dormitory_automation
-   ```
-2. **Veritabanı yapılandırması**:
+1. **Veritabanı Oluşturun**  
+   - phpMyAdmin’e giriş yapın.  
+   - “Yeni” → veritabanı adı olarak `dormitory_database` yazıp **Oluştur**’a tıklayın.
 
-   * `dormitory_database` adında bir veritabanı oluşturun:
+2. **SQL Dosyalarını İçe Aktarın**  
+   - Sol menüden `dormitory_database`’ı seçin.  
+   - Üstteki **İçe Aktar**(**import**) sekmesine gidin.  
+   - `dormitory_database.sql` dosyasını seçin ve **Git** e basın
+   - Böylece tablo yapısı ve başlangıç verileriniz yüklenecek.
 
-     ```bash
-     mysql -u root -p -e "CREATE DATABASE dormitory_database;"
+3. **Yapılandırma Dosyasını Güncelleyin**  
+   - `config/db.php` içindeki şu satırları kendi ayarlarınıza göre düzenleyin:
+     ```php
+     $host = 'localhost';  
+     $dbname = 'dormitory_database';
+     $user = 'root';
+     $pass = '';
      ```
-   * **Şema (yapı) yüklemesi**:
-
-     ```bash
-     # Sadece tablo yapıları, foreign key, trigger ve index tanımlamaları içerir
-     mysql -u root -p dormitory_database < schema.sql
+   - Eğer MySQL port’unuz farklıysa `3307` gibi port numarasını da ekleyin:
+     ```php
+     $dsn = "mysql:host=$host;port=3307;dbname=$dbname;charset=utf8";
      ```
-   * **Başlangıç verileri yüklemesi (isteğe bağlı)**:
 
-     ```bash
-     # INSERT komutlarıyla kullanıcı, öğrenci ve diğer seed verilerini ekler
-     mysql -u root -p dormitory_database < data.sql
-     ```
-3. **Bağlantı ayarları** `config/db.php` dosyasında güncelleyin:
+4. **Projeyi Çalıştırın**  
+   - Tüm dosyalar XAMPP’in `htdocs/dormitory_automation/` klasörüne kopyalanmış olmalı.  
+   - Tarayıcınızda `http://localhost/dormitory_automation/` adresine gidin.
 
-   ```php
-   <?php
-   define('DB_HOST', '127.0.0.1');
-   define('DB_PORT', '3306');
-   define('DB_NAME', 'dormitory_database');
-   define('DB_USER', 'root');
-   define('DB_PASS', '');
-   ```
-4. **Sunucuyu başlatın**:
+5. **Varsayılan Kullanıcılar**  
+   - **Güvenlik** rolüyle:  
+     - TC: `12345678901`, şifre: `123456`  
+   - **Öğrenci İşleri** rolüyle:  
+     - TC: `12345678932`, şifre: `29sude`  
 
-   * XAMPP üzerinden Apache ve MySQL servislerini çalıştırın.
-    (projenin XAMPP/Htdocs klasörünün altında olduğuna emin olun)
-5. **Uygulamayı açın**:
+
+6. **Uygulamayı açın**:
 
    * Tarayıcıda `http://localhost/dormitory_automation/public/login.php` adresine gidin.
+   * Her şey doğruysa uygulama giriş ekranını ve panelleri göreceksiniz!
 
-## Kullanım
 
-* **Güvenlik Personeli**:
 
-  * Giriş/çıkış işlemleri ekleyip silebilir.
-  * İzin taleplerini görüntüleyip filtreleyebilir.
-* **Öğrenci İşleri Personeli**:
-
-  * İzin taleplerini onaylayıp reddedebilir.
-  * Yeni öğrenci kaydı ve oda/yatak ataması yapabilir.
-  * Fatura oluşturma ve ödeme takibi gerçekleştirebilir.
 
 ## Proje Yapısı
 
