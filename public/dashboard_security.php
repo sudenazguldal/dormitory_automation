@@ -27,8 +27,8 @@ $name = $_SESSION["name"] ?? "Güvenlik";
     display: flex;
     margin: 0;
   padding: 0;
-  height: 100vh;        /* viewport yüksekliği kadar */
-  overflow: hidden;     /* body’de ekstra kaydırma kalkar */
+  height: 100vh; 
+  overflow: hidden;  /* body’de ekstra kaydırma kalkar */
     
 }
 
@@ -40,12 +40,12 @@ $name = $_SESSION["name"] ?? "Güvenlik";
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh; /* Tam ekran yüksekliği */
-    width: 170vh; /* Tam ekran genişliği */
+    height: 80vh; /* tam ekran yüksekliği */
+    width: 170vh; /* tam ekran genişliği */
     background: url('../assets/images/blue_ocean.jpg') no-repeat center right fixed;
  
   background-size: cover;
-  height: 100vh;   /* hep ekran boyunda */
+  height: 100vh;   /* hep ekran boyunda olur */
   width: 100vw;  /* hep ekran genişliğinde */
   overflow-y: auto;     /* içerik taşarsa içerikte kaydır */
    
@@ -69,8 +69,8 @@ $name = $_SESSION["name"] ?? "Güvenlik";
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                height: auto; /* İçeriğe göre ayarlanır */
-                width: 100%; /* Tam ekran genişliği */
+                height: auto; /* içeriğe göre ayarlanır */
+                width: 100%; /* tam ekran genişliği */
                 
             }
             .welcome-box {
